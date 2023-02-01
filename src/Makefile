@@ -1,10 +1,10 @@
 .PHONY: clean all linter cppcheck test style_check gcov_report
 CC=gcc
 CFLAGS=-c -Wall -Werror -Wextra -std=c11
-LDFLAGS= -lcheck -L. -ls21_decimal
+LDFLAGS= -lcheck -L. -lsfleta_decimal
 GFLAGS= -fprofile-arcs -ftest-coverage
-HEADERS=s21_decimal.h
-SOURCES=s21_decimal.c
+HEADERS=sfleta_decimal.h
+SOURCES=sfleta_decimal.c
 
 OBJECTS=$(SOURCES:.c=.o)
 OS := $(shell uname)
@@ -13,25 +13,25 @@ ifeq ($(OS), Linux)
 	LDFLAGS += -lrt -lm -lpthread -lsubunit
 endif
 
-all: s21_decimal.a
+all: sfleta_decimal.a
 
 $(OBJECTS): $(SOURCES) $(HEADERS)
 	$(CC) $(CFLAGS) $(SOURCES)
 
-s21_decimal.a: $(OBJECTS)
-	ar rc s21_decimal.a $(OBJECTS)
-	cp s21_decimal.a libs21_decimal.a
+sfleta_decimal.a: $(OBJECTS)
+	ar rc sfleta_decimal.a $(OBJECTS)
+	cp sfleta_decimal.a libsfleta_decimal.a
 
 clean:
 	rm -rf $(OBJECTS) *.a *.out *.gcda *.gcno *.info *.cfg gcov_report
 
-test: test.c s21_decimal.a
-	$(CC) s21_decimal.a $< -o test.out $(LDFLAGS)
+test: test.c sfleta_decimal.a
+	$(CC) sfleta_decimal.a $< -o test.out $(LDFLAGS)
 	./test.out
 
 gcov_report: clean
 	$(CC) $(CFLAGS) $(SOURCES) $(GFLAGS)
-	ar rcs libs21_decimal.a $(OBJECTS)
+	ar rcs libsfleta_decimal.a $(OBJECTS)
 	$(CC) -o test.out test.c $(LDFLAGS) -lgcov
 	rm -f *.o
 	./test.out
